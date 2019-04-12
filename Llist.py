@@ -39,7 +39,7 @@ class LList():
             p=p.next
         p.next=LNode(elem)
 
-    def pop_lasd(self):#删除表中最后元素
+    def pop_last(self):#删除表中最后元素
         if self._head is None:#空表
             raise LinkedListUnderflow("in pop_last")
         p=self._head
@@ -88,13 +88,64 @@ class LList():
                 yield p.elem
             p=p.next
 
-# mlist1=LList()
-# for i in range(1,10):
-#     mlist1.prepend(i)
-# for i in range(11,20):
-#     mlist1.append(i)
-# mlist1.printall()
-# mlist1.for_each(print)
+    def rev(self):#链表反转
+        p = None
+        while self._head is not None:
+            q=self._head
+            self._head=q.next#摘下原来的首结点
+            q.next=p
+            p=q#将刚摘下的结点加入p引用的结点序列
+        self._head=p#反转后的结点序列已经做好，重置表头链接
+
+#链表排序
+    def sort1(self):#移动表中元素
+        if self._head is None:
+            return
+        crt=self._head.next#从首结点之后开始处理
+        while crt is not None:
+            x=crt.elem
+            p=self._head
+            while p is not crt and p.elem<=x:#跳过小元素
+                p=p.next
+            while p is not crt:#倒换大元素，完成元素插入工作
+                y=p.elem
+                p.elem=x
+                x=y
+                p=p.next
+            crt.elem=x#回填最后一个元素（调换后的大元素）
+            crt= crt.next
+
+    def sort2(self):#调整结点之间的链接关系
+        p=self._head
+        if p is None or p.next is None:#如果表为空或只有一个元素则不操作，无需排序
+            return
+        rem=p.next#rem记录除了第一个元素以外的结点段
+        p.next=None#摘下首结点
+        while rem is not None:
+            p=self._head
+            q=None
+            while p is not None and p.elem<=rem.elem:
+                q=p
+                p=p.next
+            if q is None:#表头插入，即首元素大于x
+                self._head=rem
+            else:#一般情况插入
+                q.next=rem
+            q=rem
+            rem= rem.next
+            q.next=p
+
+
+
+
+mlist1=LList()
+for i in range(1,10):
+    mlist1.prepend(i)
+for i in range(11,20):
+    mlist1.append(i)
+mlist1.sort2()
+#mlist1.rev()
+mlist1.for_each(print)
 # for x in mlist1.elements():
 #     print(x,end=' ')
 # for i in mlist1.filter(lambda i:i>10):#谓词参数，返回单链表中元素大于10的元素,在python中可以使用lambda表达式定制这个“判断谓词参数”
@@ -122,7 +173,7 @@ class LList1(LList):
             self._rear.next=LNode(elem)
             self._rear=self._rear.next
 
-    def pop_lasd(self):
+    def pop_last(self):
         if self._head is None:#是空表
             raise LinkedListUnderflow("in pop_last")
         p=self._head
@@ -136,6 +187,8 @@ class LList1(LList):
         p.next=None
         self._rear=p
         return e
+
+
 
 # mlist1=LList1()
 # mlist1.prepend(99)
@@ -189,9 +242,10 @@ class LCList:
             p=p.next
 
 
-mlist1 = LCList()
-mlist1.prepend(99)
-for i in range(11, 20):
-    mlist1.append(randint(1, 20))
-mlist1.printall()
-print(mlist1.pop())
+# mlist1 = LCList()
+# mlist1.prepend(99)
+# for i in range(11, 20):
+#     mlist1.append(randint(1, 20))
+# mlist1.printall()
+# print(mlist1.pop())
+
